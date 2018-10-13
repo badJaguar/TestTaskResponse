@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,13 +45,13 @@ namespace TestTaskResponse
                 new Task("task_b", "task_c"),
                 new Task("task_c", "task_e"),
                 new Task("task_d", "task_a", "task_e"),
-                new Task("task_e"),
+                new Task("task_e")
             };
 
             var sortedTasks = Sort(tasks);
             foreach (var task in sortedTasks)
             {
-                Console.WriteLine($"- {task.Name} {task.Dependencies.Length}");
+                Console.WriteLine($"- {task}");
             }
 
             Console.ReadLine();
@@ -73,11 +75,35 @@ namespace TestTaskResponse
         /// - task_c
         /// - task_a
         /// </summary>
-        public static Task[] Sort(Task[] tasks)
+        /// <param name="tasks">todo: describe tasks parameter on Sort</param>
+        public static List<string> Sort(Task[] tasks)
         {
-            return tasks;
-            //var sortingTasks = tasks.Where(t => t.Dependencies.SequenceEqual(t.Dependencies)).OrderBy(t => t.Name);
-            //return sortingTasks.Reverse();
+            var result = new List<string>();
+            
+            foreach (var task in tasks)
+            {
+                if (!result.Contains(task.Name))
+                    result.Add(task.Name);
+
+                foreach (var depency in task.Dependencies)
+                    if (!result.Contains(depency))
+                    {
+                        result.Insert(result.IndexOf(task.Name), depency);
+                    }
+            }
+            return result;
         }
     }
+
+    //var sorted = from t in tasks
+    //    orderby t.Dependencies.Rank,
+    //        t.Dependencies.Length,
+    //        t.Dependencies.ToString()
+    //    select t.Name;
+
+    //foreach (var value in sorted)
+    //{
+    //    Console.WriteLine(value);
+    //}
+    //return tasks;
 }
