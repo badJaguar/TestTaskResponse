@@ -75,11 +75,10 @@ namespace TestTaskResponse
         /// - task_c
         /// - task_a
         /// </summary>
-        /// <param name="tasks">todo: describe tasks parameter on Sort</param>
+        /// <param name="tasks"></param>
         public static List<string> Sort(Task[] tasks)
         {
             var result = new List<string>();
-            
             foreach (var task in tasks)
             {
                 if (!result.Contains(task.Name))
@@ -87,23 +86,9 @@ namespace TestTaskResponse
 
                 foreach (var depency in task.Dependencies)
                     if (!result.Contains(depency))
-                    {
                         result.Insert(result.IndexOf(task.Name), depency);
-                    }
             }
             return result;
         }
     }
-
-    //var sorted = from t in tasks
-    //    orderby t.Dependencies.Rank,
-    //        t.Dependencies.Length,
-    //        t.Dependencies.ToString()
-    //    select t.Name;
-
-    //foreach (var value in sorted)
-    //{
-    //    Console.WriteLine(value);
-    //}
-    //return tasks;
 }
