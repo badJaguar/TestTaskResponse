@@ -41,17 +41,17 @@ namespace TestTaskResponse
             // means that task_a may be started only after task_c is complete
             var tasks = new[]
             {
-                new Task("task_a", "task_c"),
-                new Task("task_b", "task_c"),
-                new Task("task_c", "task_e"),
-                new Task("task_d", "task_a", "task_e"),
-                new Task("task_e")
+                new Task("task_a", "task_c"), // 4 1 3
+                new Task("task_b", "task_c"), // 5 2 3
+                new Task("task_c", "task_e"), // 8 3 5
+                new Task("task_d", "task_a", "task_e"), // 10 4 1 5 DBCA
+                new Task("task_e") //5
             };
 
             var sortedTasks = Sort(tasks);
             foreach (var task in sortedTasks)
             {
-                Console.WriteLine($"- {task}");
+                Console.WriteLine($"- {task.Name}");
             }
 
             Console.ReadLine();
@@ -76,19 +76,19 @@ namespace TestTaskResponse
         /// - task_a
         /// </summary>
         /// <param name="tasks"></param>
-        public static List<string> Sort(Task[] tasks)
+        public static Task[] Sort(Task[] tasks)
         {
-            var result = new List<string>();
             foreach (var task in tasks)
             {
-                if (!result.Contains(task.Name))
-                    result.Add(task.Name);
 
-                foreach (var depency in task.Dependencies)
-                    if (!result.Contains(depency))
-                        result.Insert(result.IndexOf(task.Name), depency);
+                foreach (var val in task.Dependencies)
+                {
+                    var v = Array.IndexOf(task.Dependencies, val);
+                    Console.WriteLine(v);
+                }
             }
-            return result;
+
+            return tasks;
         }
     }
 }
