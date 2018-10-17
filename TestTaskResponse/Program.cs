@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using TaskAlias = System.Threading.Tasks.Task;
 
 namespace TestTaskResponse
 {
@@ -80,15 +83,43 @@ namespace TestTaskResponse
         {
             foreach (var task in tasks)
             {
-
-                foreach (var val in task.Dependencies)
+                switch (task.Dependencies[0])
                 {
-                    var v = Array.IndexOf(task.Dependencies, val);
-                    Console.WriteLine(v);
+                    case "task_c":
+                        {
+                            Console.WriteLine(task.Name);
+
+                            break;
+                        }
+
+                    default:
+                        {
+                            throw new Exception("Unexpected Case");
+                        }
                 }
+
             }
 
             return tasks;
         }
     }
 }
+//foreach (var v in task.Dependencies)
+//{
+//    var c = v.Replace("task_", string.Empty);
+
+//    var r = from t in task.Dependencies
+//            select t;
+
+//    var d = from b in r
+//            select b;
+
+//    var h = from s in d
+//            group s by task.Name;
+//    foreach (var VARIABLE in h)
+//    {
+//        Array.IndexOf(task.Dependencies, c);
+//        //Console.WriteLine($" {task.Name}");
+//    }
+
+//}
