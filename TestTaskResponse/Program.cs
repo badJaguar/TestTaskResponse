@@ -95,9 +95,10 @@ namespace TestTaskResponse
             Array.Sort(strings);
 
             var names = from t in tasks
-                        select t.Name
-                into name
-                        group name by strings;
+                        select t.Name;
+            var g = names.OrderBy
+
+
 
 
             foreach (var dependency in strings)
