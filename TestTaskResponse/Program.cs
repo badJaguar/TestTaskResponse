@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TaskAlias = System.Threading.Tasks.Task;
@@ -81,25 +82,26 @@ namespace TestTaskResponse
         /// <param name="tasks"></param>
         public static Task[] Sort(Task[] tasks)
         {
-            foreach (var task in tasks)
+            var list = new List<string>();
+            var dependencies = from t in tasks
+                               select t.Dependencies
+                into o
+                               from task in o
+                               select task;
+
+            var collection = dependencies as string[] ?? dependencies.ToArray();
+            list.AddRange(collection);
+            var strings = collection.ToArray();
+            Array.Sort(strings);
+
+            var names = from t in tasks
+                        select t.Name;
+
+            foreach (var dependency in strings)
             {
-                switch (task.Dependencies[0])
-                {
-                    case "task_c":
-                        {
-                            Console.WriteLine(task.Name);
-
-                            break;
-                        }
-
-                    default:
-                        {
-                            throw new Exception("Unexpected Case");
-                        }
-                }
-
+                //if()
+                Console.Write($" {dependency}");
             }
-
             return tasks;
         }
     }
