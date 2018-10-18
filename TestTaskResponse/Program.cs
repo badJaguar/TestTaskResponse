@@ -45,11 +45,11 @@ namespace TestTaskResponse
             // means that task_a may be started only after task_c is complete
             var tasks = new[]
             {
-                new Task("task_a", "task_c"), // 4 1 3
-                new Task("task_b", "task_c"), // 5 2 3
-                new Task("task_c", "task_e"), // 8 3 5
-                new Task("task_d", "task_a", "task_e"), // 10 4 1 5 DBCA
-                new Task("task_e") //5
+                new Task("task_a", "task_c"),
+                new Task("task_b", "task_c"),
+                new Task("task_c", "task_e"),
+                new Task("task_d", "task_a", "task_e"),
+                new Task("task_e")
             };
 
             var sortedTasks = Sort(tasks);
@@ -85,8 +85,8 @@ namespace TestTaskResponse
             var list = new List<string>();
             var dependencies = from t in tasks
                                select t.Dependencies
-                into o
-                               from task in o
+                into orderedDeps
+                               from task in orderedDeps
                                select task;
 
             var collection = dependencies as string[] ?? dependencies.ToArray();
@@ -95,12 +95,14 @@ namespace TestTaskResponse
             Array.Sort(strings);
 
             var names = from t in tasks
-                        select t.Name;
+                        select t.Name
+                into name
+                        group name by strings;
+
 
             foreach (var dependency in strings)
             {
-                //if()
-                Console.Write($" {dependency}");
+                Console.WriteLine($" {dependency}");
             }
             return tasks;
         }
