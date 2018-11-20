@@ -78,22 +78,23 @@ namespace TestTaskResponse
         /// <param name="tasks"></param>
         public static Task[] Sort(Task[] tasks)
         {
-            var r = (from t in tasks
-                     from d in t.Dependencies
-                     select d).ToArray().Select(f =>
+            var calcDependencies = (from task in tasks
+                                    from dependency in task.Dependencies
+                                    select dependency).ToArray().Select(depCalc =>
 
-                new[]
-                {
-                    f.ToCharArray()
-                        .Select(g => (int)g % 32).Sum()
-                })
-                .Select(u => u[0]).ToArray();
+                               new[]
+                               {
+                                   depCalc.ToCharArray()
+                                       .Select(charToCount =>
+                                           (int)charToCount % 32).Sum()
+                               })
+                                 .Select(i => i[0]).ToArray();
 
-            var b = (from c in tasks
-                     select c.Name).ToArray();
+            var names = (from task in tasks
+                         select task.Name).ToArray();
 
-            Array.Sort(r, b);
-            Console.WriteLine(string.Join(" ", b.Reverse()));
+            Array.Sort(calcDependencies, names);
+            Console.WriteLine(string.Join(" ", names.Reverse()));
             return null;
         }
     }
