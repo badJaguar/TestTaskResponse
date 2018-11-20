@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -41,17 +42,26 @@ namespace TestTaskResponse
             // means that task_a may be started only after task_c is complete
             var tasks = new[]
             {
-                new Task("task_a", "task_c"),
+                new Task("task_a", "task_d"),
                 new Task("task_b", "task_c"),
                 new Task("task_c", "task_e"),
                 new Task("task_d", "task_a", "task_e"),
-                new Task("task_e")
+                new Task("task_e"),
+
+                     //new Task("task_a", "task_b", "task_c"),
+                     //new Task("task_b"),
+                     //new Task("task_c", "task_b")
+                
+                //new Task("task_c", "task_d", "task_b"),
+                //new Task("task_a", "task_b", "task_c"),
+                //new Task("task_d", "task_b")
+
             };
 
             var sortedTasks = Sort(tasks);
             foreach (var task in sortedTasks)
             {
-                Console.WriteLine($"- {task}");
+                Console.WriteLine($"- {task.Name}");
             }
 
             Console.ReadLine();
@@ -89,13 +99,17 @@ namespace TestTaskResponse
                                            (int)charToCount % 32).Sum()
                                })
                                  .Select(i => i[0]).ToArray();
+            var r = (from e in tasks
+                     group e by e.Dependencies into g
+                     select g.Key);
 
-            var names = (from task in tasks
-                         select task.Name).ToArray();
+            foreach (var g in r)
+            {
+                Console.WriteLine(string.Join(" ", g)); // Selected and sorted tasks
+            }
 
-            Array.Sort(calcDependencies, names);
-            Console.WriteLine(string.Join(" ", names.Reverse()));
-            return null;
+            Array.Sort(calcDependencies, tasks);
+            return tasks;
         }
     }
 }
