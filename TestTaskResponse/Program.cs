@@ -76,19 +76,25 @@ namespace TestTaskResponse
         /// - task_a
         /// </summary>
         /// <param name="tasks"></param>
-        public static List<string> Sort(Task[] tasks)
+        public static Task[] Sort(Task[] tasks)
         {
-            var result = new List<string>();
-            foreach (var task in tasks)
-            {
-                if (!result.Contains(task.Name))
-                    result.Add(task.Name);
+            var r = (from t in tasks
+                     from d in t.Dependencies
+                     select d).ToArray().Select(f =>
 
-                foreach (var depency in task.Dependencies)
-                    if (!result.Contains(depency))
-                        result.Insert(result.IndexOf(task.Name), depency);
-            }
-            return result;
+                new[]
+                {
+                    f.ToCharArray()
+                        .Select(g => (int)g % 32).Sum()
+                })
+                .Select(u => u[0]).ToArray();
+
+            var b = (from c in tasks
+                     select c.Name).ToArray();
+
+            Array.Sort(r, b);
+            Console.WriteLine(string.Join(" ", b.Reverse()));
+            return null;
         }
     }
 }
