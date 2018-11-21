@@ -99,9 +99,10 @@ namespace TestTaskResponse
                                            (int)charToCount % 32).Sum()
                                })
                                  .Select(i => i[0]).ToArray();
+
             var r = (from e in tasks
                      group e by e.Dependencies into g
-                     select g.Key);
+                     select g.Key).AsParallel();
 
             foreach (var g in r)
             {
