@@ -42,11 +42,11 @@ namespace TestTaskResponse
             // means that task_a may be started only after task_c is complete
             var tasks = new[]
             {
-                new Task("task_a", "task_d"),
-                new Task("task_b", "task_c"),
-                new Task("task_c", "task_e"),
-                new Task("task_d", "task_a", "task_e"),
-                new Task("task_e"),
+                new Task("a", "c"),
+                new Task("b", "d"),
+                new Task("c", "e"),
+                new Task("d", "a", "e"),
+                new Task("e"),
 
                      //new Task("task_a", "task_b", "task_c"),
                      //new Task("task_b"),
@@ -88,28 +88,38 @@ namespace TestTaskResponse
         /// <param name="tasks"></param>
         public static Task[] Sort(Task[] tasks)
         {
-            var calcDependencies = (from task in tasks
-                                    from dependency in task.Dependencies
-                                    select dependency).ToArray().Select(depCalc =>
+            //var calcDependencies = (from task in tasks
+            //                        from dependency in task.Dependencies
+            //                        select dependency).ToArray().Select(depCalc =>
 
-                               new[]
-                               {
-                                   depCalc.ToCharArray()
-                                       .Select(charToCount =>
-                                           (int)charToCount % 32).Sum()
-                               })
-                                 .Select(i => i[0]).ToArray();
+            //                   new[]
+            //                   {
+            //                       depCalc.ToCharArray()
+            //                           .Select(charToCount =>
+            //                               (int)charToCount % 32).Sum()
+            //                   })
+            //                     .Select(i => i[0]).ToArray();
+
+            var task = from t in tasks
+                select t;
+
+            var dep = (from task1 in tasks
+                       from t in task1.Dependencies
+                select t).ToArray();
+
 
             var r = (from e in tasks
                      group e by e.Dependencies into g
-                     select g.Key).AsParallel();
+                     select g.Key)
+                    .SelectMany(f=>f.Select(n=>n.ToCharArray()
+                    .Select(charToCount =>
+                    (int)charToCount % 32).Sum())).ToArray();
+            //Array.Sort(dep, r);
+            Console.WriteLine(string.Join(" ", dep));
 
-            foreach (var g in r)
-            {
-                Console.WriteLine(string.Join(" ", g)); // Selected and sorted tasks
-            }
+            Console.WriteLine(string.Join(" ", r));
 
-            Array.Sort(calcDependencies, tasks);
+            Array.Sort(dep, tasks);
             return tasks;
         }
     }
