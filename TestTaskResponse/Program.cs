@@ -113,7 +113,7 @@ namespace TestTaskResponse
                      select g.Key)
                     .SelectMany(f=>f.Select(n=>n.ToCharArray()
                     .Select(charToCount =>
-                    (int)charToCount % 32).Sum())).ToArray();
+                    (int)charToCount % 32).Sum()).Where(c=>dep.Count() != c)).ToArray(); //???
             //Array.Sort(dep, r);
             Console.WriteLine(string.Join(" ", dep));
 
