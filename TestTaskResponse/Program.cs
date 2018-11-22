@@ -100,20 +100,25 @@ namespace TestTaskResponse
             //                   })
             //                     .Select(i => i[0]).ToArray();
 
+
             var task = from t in tasks
-                select t;
+                       select t;
 
             var dep = (from task1 in tasks
                        from t in task1.Dependencies
-                select t).ToArray();
+                       select t).ToArray();
 
+            var s = string.Join(" ", dep);
 
+            int arraySize = s.Length;
+            var keys = new double[arraySize];
+            Console.WriteLine(String.Join(" ", keys));
             var r = (from e in tasks
                      group e by e.Dependencies into g
                      select g.Key)
-                    .SelectMany(f=>f.Select(n=>n.ToCharArray()
-                    .Select(charToCount =>
-                    (int)charToCount % 32).Sum()).Where(c=>dep.Count() != c)).ToArray(); //???
+                    .SelectMany(f => f.Select(n => n.ToCharArray()
+                      .Select(charToCount =>
+                      (int)charToCount % 32).Sum()).Where(c => dep.Count() != c)).ToArray(); //???
             //Array.Sort(dep, r);
             Console.WriteLine(string.Join(" ", dep));
 
