@@ -101,31 +101,24 @@ namespace TestTaskResponse
             //                     .Select(i => i[0]).ToArray();
 
 
-            var task = (from t in tasks
-                        select t.Dependencies).ToList();
+            //var task = (from t in tasks
+            //            select t.Dependencies).ToList();
 
-            var dep = (from task1 in tasks
-                       from t in task1.Dependencies
-                       select t).ToArray();
+            //var dep = (from task1 in tasks
+            //           from t in task1.Dependencies
+            //           select t).ToArray();
 
-            var indexed = tasks.Select((t, i) =>
-                new
-                {
-                    Task = t,
-                    Index = i
-                });
+            var indexedNames = tasks.Select((t, i) => new { Task = t.Name, Index = i}).ToArray();
+            var indexedDeps = tasks.Select((t, i) => new { Task = t.Dependencies, Index = i });
 
-            var countedDeps = indexed.SelectMany(e => e.Task.Name).ToArray();
+            var s = (from task in indexedDeps
+                orderby task.Task
+                select task).Select(t=>t.Task);
 
-            Console.WriteLine(string.Join(" ", countedDeps));
-            //var r = (from e in tasks
-            //         group e by e.Dependencies
-            //    into g
-            //         select g.Key);
-            //.SelectMany(f => f.Select(n => n.ToCharArray()
-            //  .Select(charToCount =>
-            //  (int)charToCount % 32).Sum()).Where(c => dep.Count() != c)).ToArray(); //???
-            //Array.Sort(dep, r);
+            
+
+            Console.WriteLine(String.Join(" ", s));
+
 
             return tasks;
         }
