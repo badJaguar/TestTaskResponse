@@ -88,38 +88,15 @@ namespace TestTaskResponse
         /// <param name="tasks"></param>
         public static Task[] Sort(Task[] tasks)
         {
-            //var calcDependencies = (from task in tasks
-            //                        from dependency in task.Dependencies
-            //                        select dependency).ToArray().Select(depCalc =>
+            var task = from t in tasks
+                select t.Name;
 
-            //                   new[]
-            //                   {
-            //                       depCalc.ToCharArray()
-            //                           .Select(charToCount =>
-            //                               (int)charToCount % 32).Sum()
-            //                   })
-            //                     .Select(i => i[0]).ToArray();
+            var deps = (from t in tasks
+                let r = t.Dependencies
+                let st = string.Join(" ", r)
+                        select st != "" ? st : $"task_0");
 
-
-            //var task = (from t in tasks
-            //            select t.Dependencies).ToList();
-
-            //var dep = (from task1 in tasks
-            //           from t in task1.Dependencies
-            //           select t).ToArray();
-
-            var indexedNames = tasks.Select((t, i) => new { Task = t.Name, Index = i}).ToArray();
-            var indexedDeps = tasks.Select((t, i) => new { Task = t.Dependencies, Index = i });
-
-            var s = (from task in indexedDeps
-                orderby task.Task
-                select task).Select(t=>t.Task);
-
-            
-
-            Console.WriteLine(String.Join(" ", s));
-
-
+            Console.WriteLine(string.Join(" ", deps));
             return tasks;
         }
     }
